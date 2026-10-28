@@ -36,6 +36,18 @@ impl<'a> Accounts<'a> {
     /// Gets an account: a group of customers that belong to the same business. Look it up by its `account_id`, or by the `customer_id` of any customer linked to it. Accounts only organize customers — each customer keeps its own plans, billing and Stripe customer.
     ///
     /// `POST /v1/accounts.get` (operation `getAccount`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::GetAccountParams;
+    ///
+    /// let response = autumn.accounts().get(GetAccountParams::new()).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn get(&self, request: GetAccountParams) -> Result<Account> {
         self.client.execute(&OP_GET_ACCOUNT, Some(&request)).await
     }
@@ -43,6 +55,18 @@ impl<'a> Accounts<'a> {
     /// Updates an account's name or ID, and links or unlinks customers. Account IDs are optional and only ever set by you. A customer belongs to at most one account. Look the account up by `account_id` or by any linked customer's `customer_id`; when that customer has no account yet, linking customers to it creates one. Linking a customer that is already in another account fails unless you pass `move: true`. Removing the last customer deletes the account and returns `null`.
     ///
     /// `POST /v1/accounts.update` (operation `updateAccount`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::UpdateAccountParams;
+    ///
+    /// let response = autumn.accounts().update(UpdateAccountParams::new()).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn update(&self, request: UpdateAccountParams) -> Result<UpdateAccountResponse> {
         self.client
             .execute(&OP_UPDATE_ACCOUNT, Some(&request))

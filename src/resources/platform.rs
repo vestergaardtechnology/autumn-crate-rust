@@ -63,6 +63,20 @@ impl<'a> Platform<'a> {
     /// Read a managed organization's Stripe OAuth connection, account ID, and authorization time in the selected environment.
     ///
     /// `POST /v1/platform.get_stripe_connection` (operation `getStripeConnection`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{GetStripeConnectionEnv, GetStripeConnectionParams};
+    ///
+    /// let response = autumn.platform().get_stripe_connection(
+    ///     GetStripeConnectionParams::new("example", GetStripeConnectionEnv::Test),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn get_stripe_connection(
         &self,
         request: GetStripeConnectionParams,
@@ -75,6 +89,20 @@ impl<'a> Platform<'a> {
     /// Revoke Autumn's Stripe OAuth access for a managed organization in the selected environment. Does not delete the Stripe account or cancel subscriptions.
     ///
     /// `POST /v1/platform.disconnect_stripe` (operation `disconnectStripe`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{DisconnectStripeEnv, DisconnectStripeParams};
+    ///
+    /// let response = autumn.platform().disconnect_stripe(
+    ///     DisconnectStripeParams::new("example", DisconnectStripeEnv::Test),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn disconnect_stripe(
         &self,
         request: DisconnectStripeParams,
@@ -87,6 +115,20 @@ impl<'a> Platform<'a> {
     /// Generate a RevenueCat OAuth URL for linking a project to an organization.
     ///
     /// `POST /v1/platform.link_revenuecat` (operation `linkRevenueCat`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{LinkRevenueCatEnv, LinkRevenueCatParams};
+    ///
+    /// let response = autumn.platform().link_revenue_cat(
+    ///     LinkRevenueCatParams::new("example", LinkRevenueCatEnv::Test, "example", "example"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn link_revenue_cat(
         &self,
         request: LinkRevenueCatParams,
@@ -99,6 +141,20 @@ impl<'a> Platform<'a> {
     /// Push an organization's plans into RevenueCat as products (creating or renaming them across the project's apps) and set test-store prices from each plan's price. Requires the org to have linked RevenueCat via OAuth.
     ///
     /// `POST /v1/platform.sync_revenuecat` (operation `syncRevenueCat`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{SyncRevenueCatEnv, SyncRevenueCatParams};
+    ///
+    /// let response = autumn.platform().sync_revenue_cat(
+    ///     SyncRevenueCatParams::new("example", SyncRevenueCatEnv::Test),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn sync_revenue_cat(
         &self,
         request: SyncRevenueCatParams,
@@ -111,6 +167,20 @@ impl<'a> Platform<'a> {
     /// Retrieve a managed organization's RevenueCat public (SDK) API keys, grouped by app — for the test store, App Store, and Google Play Store. Use these to configure the RevenueCat SDK in the org's mobile app.
     ///
     /// `POST /v1/platform.get_revenuecat_keys` (operation `getRevenueCatKeys`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{GetRevenueCatKeysEnv, GetRevenueCatKeysParams};
+    ///
+    /// let response = autumn.platform().get_revenue_cat_keys(
+    ///     GetRevenueCatKeysParams::new("example", GetRevenueCatKeysEnv::Test),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn get_revenue_cat_keys(
         &self,
         request: GetRevenueCatKeysParams,

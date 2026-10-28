@@ -67,6 +67,20 @@ impl<'a> Entities<'a> {
     /// **Returns:** The created entity object including its current subscriptions, purchases, and balances.
     ///
     /// `POST /v1/entities.create` (operation `createEntity`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::CreateEntityParams;
+    ///
+    /// let response = autumn.entities().create(
+    ///     CreateEntityParams::new("messages", "cus_123", "seat_1"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn create(&self, request: CreateEntityParams) -> Result<CreateEntityResponse> {
         self.client.execute(&OP_CREATE_ENTITY, Some(&request)).await
     }
@@ -78,6 +92,18 @@ impl<'a> Entities<'a> {
     /// **Returns:** The entity object including its current subscriptions, purchases, and balances.
     ///
     /// `POST /v1/entities.get` (operation `getEntity`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::GetEntityParams;
+    ///
+    /// let response = autumn.entities().get(GetEntityParams::new("seat_1")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn get(&self, request: GetEntityParams) -> Result<GetEntityResponse> {
         self.client.execute(&OP_GET_ENTITY, Some(&request)).await
     }
@@ -89,6 +115,18 @@ impl<'a> Entities<'a> {
     /// **Returns:** A paginated list of entity objects including their current subscriptions, purchases, balances, and flags.
     ///
     /// `POST /v1/entities.list` (operation `listEntities`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::ListEntitiesParams;
+    ///
+    /// let response = autumn.entities().list(ListEntitiesParams::new()).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn list(&self, request: ListEntitiesParams) -> Result<ListEntitiesResponse> {
         self.client.execute(&OP_LIST_ENTITIES, Some(&request)).await
     }
@@ -100,6 +138,18 @@ impl<'a> Entities<'a> {
     /// **Returns:** The updated entity object including its current subscriptions, purchases, and balances.
     ///
     /// `POST /v1/entities.update` (operation `updateEntity`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::UpdateEntityParams;
+    ///
+    /// let response = autumn.entities().update(UpdateEntityParams::new("seat_1")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn update(&self, request: UpdateEntityParams) -> Result<UpdateEntityResponse> {
         self.client.execute(&OP_UPDATE_ENTITY, Some(&request)).await
     }
@@ -111,6 +161,18 @@ impl<'a> Entities<'a> {
     /// **Returns:** A success flag indicating the entity was deleted.
     ///
     /// `POST /v1/entities.delete` (operation `deleteEntity`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::DeleteEntityParams;
+    ///
+    /// let response = autumn.entities().delete(DeleteEntityParams::new("seat_1")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn delete(&self, request: DeleteEntityParams) -> Result<DeleteEntityResponse> {
         self.client.execute(&OP_DELETE_ENTITY, Some(&request)).await
     }

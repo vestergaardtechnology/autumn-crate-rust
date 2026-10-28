@@ -108,6 +108,18 @@ impl<'a> Invoices<'a> {
     /// Creates a standalone send-invoice Stripe invoice from catalog pricing and custom charges. Quantities are billable units, exclusive of any included usage; Autumn applies billing units and tiers. Nothing about the customer's plans, balances or subscriptions changes. Pass preview: true to get the calculated lines and totals without creating an invoice.
     ///
     /// `POST /v1/invoices.create` (operation `createInvoice`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::CreateInvoiceParams;
+    ///
+    /// let response = autumn.invoices().create(CreateInvoiceParams::new("cus_123")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn create(&self, request: CreateInvoiceParams) -> Result<CreateInvoiceResponse> {
         self.client
             .execute(&OP_CREATE_INVOICE, Some(&request))
@@ -117,6 +129,18 @@ impl<'a> Invoices<'a> {
     /// Finalizes a draft Stripe invoice, such as one left in draft by invoice mode with finalize set to false. Stripe then collects it: a send-invoice invoice is emailed and an automatically-charged one is charged. Any plan still waiting on the invoice to be paid expires at its due date. Already open or paid invoices are returned unchanged.
     ///
     /// `POST /v1/invoices.finalize` (operation `finalizeInvoice`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::FinalizeInvoiceParams;
+    ///
+    /// let response = autumn.invoices().finalize(FinalizeInvoiceParams::new("in_123")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn finalize(
         &self,
         request: FinalizeInvoiceParams,
@@ -129,6 +153,20 @@ impl<'a> Invoices<'a> {
     /// Inserts or updates up to 500 historical invoices without reading or mutating the billing processor.
     ///
     /// `POST /v1/invoices.insert` (operation `insertInvoices`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{InsertInvoicesInvoiceRequestBody, InsertInvoicesParams, InsertInvoicesStatus};
+    ///
+    /// let response = autumn.invoices().insert(
+    ///     InsertInvoicesParams::new(vec![InsertInvoicesInvoiceRequestBody::new("cus_123", "stripe_123", InsertInvoicesStatus::Draft, 1.0, 1.0)]),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn insert(&self, request: InsertInvoicesParams) -> Result<InsertInvoicesResponse> {
         self.client
             .execute(&OP_INSERT_INVOICES, Some(&request))
@@ -138,6 +176,18 @@ impl<'a> Invoices<'a> {
     /// Lists invoices with cursor pagination and optional filters (customer, entity, status, processor). Pass `start_cursor: ""` (or omit) for the first page; use `next_cursor` from a prior response for subsequent pages.
     ///
     /// `POST /v1/invoices.list` (operation `listInvoices`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::ListInvoicesParams;
+    ///
+    /// let response = autumn.invoices().list(ListInvoicesParams::new()).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn list(&self, request: ListInvoicesParams) -> Result<ListInvoicesResponse> {
         self.client.execute(&OP_LIST_INVOICES, Some(&request)).await
     }
@@ -145,6 +195,18 @@ impl<'a> Invoices<'a> {
     /// Lists the organization's invoice templates, newest first, with offset pagination. Use a template's `id` as `invoice_template_id` when creating or reissuing an invoice.
     ///
     /// `POST /v1/invoices.listTemplates` (operation `listInvoiceTemplates`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::ListInvoiceTemplatesParams;
+    ///
+    /// let response = autumn.invoices().list_templates(ListInvoiceTemplatesParams::new()).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn list_templates(
         &self,
         request: ListInvoiceTemplatesParams,
@@ -157,6 +219,18 @@ impl<'a> Invoices<'a> {
     /// Marks an open Stripe invoice as paid out of band. No charge is attempted; use this when payment was collected elsewhere (e.g. a marketplace). Already-paid invoices are returned unchanged.
     ///
     /// `POST /v1/invoices.pay` (operation `payInvoice`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::PayInvoiceParams;
+    ///
+    /// let response = autumn.invoices().pay(PayInvoiceParams::new("in_123")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn pay(&self, request: PayInvoiceParams) -> Result<PayInvoiceResponse> {
         self.client.execute(&OP_PAY_INVOICE, Some(&request)).await
     }
@@ -164,6 +238,20 @@ impl<'a> Invoices<'a> {
     /// Issues a Stripe credit note against an open or paid invoice, for a flat amount or for specific invoice lines. On an open invoice the credit reduces what is still owed. On a paid invoice the credited money goes to the chosen destination: the customer's balance (default), a refund, or a record of money returned outside Stripe. Line amounts are pre-discount and pre-tax, like the invoice's own item amounts. Pass preview to see the credit note without issuing it.
     ///
     /// `POST /v1/invoices.issue_credit_note` (operation `issueCreditNote`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::IssueCreditNoteParams;
+    ///
+    /// let response = autumn.invoices().issue_credit_note(
+    ///     IssueCreditNoteParams::new("in_123"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn issue_credit_note(
         &self,
         request: IssueCreditNoteParams,
@@ -176,6 +264,18 @@ impl<'a> Invoices<'a> {
     /// Voids an open send-invoice Stripe invoice and issues a replacement with the same line items. An invoice template can supply the replacement's footer (e.g. bank details) and memo. The replacement keeps the original due date unless net_terms_days is passed, which is required once the original is past due. Pass update_customer_email to change the customer's billing email first so the replacement is sent there. The replacement stays linked to the same subscription and fulfils the same pending plan when paid.
     ///
     /// `POST /v1/invoices.reissue` (operation `reissueInvoice`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::ReissueInvoiceParams;
+    ///
+    /// let response = autumn.invoices().reissue(ReissueInvoiceParams::new("in_123")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn reissue(&self, request: ReissueInvoiceParams) -> Result<ReissueInvoiceResponse> {
         self.client
             .execute(&OP_REISSUE_INVOICE, Some(&request))
@@ -185,6 +285,20 @@ impl<'a> Invoices<'a> {
     /// Changes which payment methods a draft or open Stripe invoice accepts. The customer sees the change on the hosted invoice page straight away.
     ///
     /// `POST /v1/invoices.update` (operation `updateInvoice`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{UpdateInvoiceParams, UpdateInvoicePaymentMethodType};
+    ///
+    /// let response = autumn.invoices().update(
+    ///     UpdateInvoiceParams::new("in_123", vec![UpdateInvoicePaymentMethodType::Card]),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn update(&self, request: UpdateInvoiceParams) -> Result<UpdateInvoiceResponse> {
         self.client
             .execute(&OP_UPDATE_INVOICE, Some(&request))
@@ -194,6 +308,18 @@ impl<'a> Invoices<'a> {
     /// Voids a draft, open or uncollectible Stripe invoice. A draft is retired without charging or emailing the customer: a one-off draft is deleted from Stripe, and a subscription draft is finalized without collection and then voided. Any plan still waiting on the invoice to be paid expires. Voiding an unpaid subscription invoice lets Stripe re-derive the subscription status from its remaining invoices, which can move a past-due subscription back to active. Already-void invoices are returned unchanged.
     ///
     /// `POST /v1/invoices.void` (operation `voidInvoice`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::VoidInvoiceParams;
+    ///
+    /// let response = autumn.invoices().void(VoidInvoiceParams::new("in_123")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn void(&self, request: VoidInvoiceParams) -> Result<VoidInvoiceResponse> {
         self.client.execute(&OP_VOID_INVOICE, Some(&request)).await
     }

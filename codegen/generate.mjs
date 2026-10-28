@@ -993,7 +993,132 @@ function responseTy(op) {
   return tys[0];
 }
 
-function renderOperation(op, receiver) {
+// ---------------------------------------------------------------------------
+// Doc examples: a compiled `no_run` example per operation, built from the
+// request type's constructor with placeholder values.
+// ---------------------------------------------------------------------------
+
+const PLACEHOLDERS = {
+  customer_id: "cus_123",
+  new_customer_id: "cus_456",
+  plan_id: "pro",
+  product_id: "pro",
+  feature_id: "messages",
+  entity_id: "seat_1",
+  lock_id: "lock_123",
+  invoice_id: "in_123",
+  reward_id: "promo_10",
+  program_id: "referral_program",
+  code: "REF-CODE",
+  url: "https://example.com/webhooks/autumn",
+  email: "jane@example.com",
+  name: "Example",
+  model_id: "anthropic/claude-sonnet-4",
+  event_name: "ai_chat_request",
+};
+
+function placeholder(field) {
+  if (field in PLACEHOLDERS) return PLACEHOLDERS[field];
+  if (field.endsWith("_id")) return field.slice(0, -3) + "_123";
+  return "example";
+}
+
+function firstVariantName(def) {
+  const { key, value } = def.values[0];
+  let v = pascal(key) || pascal(value) || "Value";
+  if (v === "Unknown" || v === "Self") v += "Value";
+  return v;
+}
+
+// Returns a Rust expression, or null when no sensible example can be built.
+// `owned` is set where the value is not passed through `impl Into<..>`.
+function exampleExpr(ty, field, uses, depth = 0, owned = false) {
+  if (depth > 3) return null;
+  switch (ty.t) {
+    case "prim":
+      if (ty.rust === "String") {
+        const lit = JSON.stringify(placeholder(field));
+        return owned ? `${lit}.to_string()` : lit;
+      }
+      return { f64: field.includes("token") ? "1000.0" : "1.0", i64: "1", bool: "true" }[ty.rust];
+    case "value":
+      return "serde_json::json!({})";
+    case "vec": {
+      const inner = exampleExpr(ty.inner, field.replace(/s$/, ""), uses, depth + 1, true);
+      return inner === null ? null : `vec![${inner}]`;
+    }
+    case "map":
+      return null;
+    case "opt":
+      return exampleExpr(ty.inner, field, uses, depth, owned);
+    case "named": {
+      if (ty.name === FILTER_TYPE) return "serde_json::json!(true)";
+      const def = defs.get(ty.name);
+      if (!def) return null;
+      if (def.kind === "enum") {
+        uses.add(def.name);
+        return `${def.name}::${firstVariantName(def)}`;
+      }
+      if (def.kind === "alias") return exampleExpr(def.ty, field, uses, depth, owned);
+      if (def.kind === "union") {
+        const v = def.variants.find((v) => v.ty.t === "prim" && v.ty.rust === "String") ?? def.variants[0];
+        if (v.ty.t === "null") return null;
+        const inner = exampleExpr(v.ty, field, uses, depth + 1, true);
+        if (inner === null) return null;
+        uses.add(def.name);
+        return `${def.name}::${v.name}(${inner})`;
+      }
+      if (def.kind === "struct") {
+        if (def.dir === "out") {
+          const args = constructorArgs(def, uses, depth + 1);
+          if (args === null) return null;
+          uses.add(def.name);
+          return `${def.name}::new(${args.join(", ")})`;
+        }
+        if (isDefault(ty)) return "Default::default()";
+      }
+      return null;
+    }
+  }
+  return null;
+}
+
+function constructorArgs(def, uses, depth = 0) {
+  const args = [];
+  for (const f of def.fields) {
+    if (f.flags.optional || f.ty.t === "lit") continue;
+    const e = exampleExpr(f.ty, f.rname, uses, depth);
+    if (e === null) return null;
+    args.push(e);
+  }
+  return args;
+}
+
+function exampleLines(op, accessor) {
+  const call = `autumn${accessor ? "." + accessor + "()" : ""}.${methodName(op.name)}`;
+  const uses = new Set();
+  let arg = "";
+  if (op.request && op.sendsBody) {
+    let node = op.request.kind === "optional" ? op.request.inner : op.request;
+    const ty = tyOf(node, "out", pascal(op.operationId) + "Request");
+    const e = ty.t === "vec" ? exampleExpr(ty.inner, "", uses, 0, true) : exampleExpr(ty, "", uses);
+    if (e === null) return [];
+    arg = ty.t === "vec" ? `vec![${e}]` : e;
+  }
+  const out = ["# Example", "", "```no_run", "# async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {"];
+  if (uses.size) {
+    const names = [...uses].sort();
+    out.push(names.length === 1 ? `use autumn_sdk::models::${names[0]};` : `use autumn_sdk::models::{${names.join(", ")}};`, "");
+  }
+  const stmt = `let response = ${call}(${arg}).await?;`;
+  if (stmt.length > 90 && arg) {
+    out.push(`let response = ${call}(`, `    ${arg},`, `).await?;`);
+  } else out.push(stmt);
+  out.push(`println!("{response:?}");`, "# Ok(())", "# }", "```");
+  return out;
+}
+
+function renderOperation(op, receiver, accessor) {
   const reqTy = requestTy(op);
   const resTy = responseTy(op);
   const lines = [];
@@ -1001,6 +1126,8 @@ function renderOperation(op, receiver) {
   lines.push(...doc.map((l) => `    ///${l ? " " + l : ""}`));
   if (doc.length) lines.push("    ///");
   lines.push(`    /// \`POST /${op.path.replace(/^\//, "")}\` (operation \`${op.operationId}\`)`);
+  const example = exampleLines(op, accessor);
+  if (example.length) lines.push("    ///", ...example.map((l) => `    ///${l ? " " + l : ""}`));
   const name = methodName(op.name);
   if (reqTy) {
     lines.push(`    pub async fn ${name}(&self, request: ${reqTy}) -> Result<${resTy}> {`);
@@ -1051,7 +1178,7 @@ for (const r of root.resources) {
   out.push(`impl<'a> ${r.className}<'a> {`);
   cls.methods.forEach((op, i) => {
     if (i) out.push("");
-    out.push(...renderOperation(op, "self.client"));
+    out.push(...renderOperation(op, "self.client", methodName(r.name)));
   });
   out.push(`}`);
   fs.writeFileSync(path.join(resDir, `${mod}.rs`), out.join("\n") + "\n");
@@ -1086,7 +1213,7 @@ for (const r of root.resources) {
   }
   root.methods.forEach((op, i) => {
     if (i) out.push("");
-    out.push(...renderOperation(op, "self"));
+    out.push(...renderOperation(op, "self", null));
   });
   out.push("}");
   fs.writeFileSync(path.join(resDir, "mod.rs"), out.join("\n") + "\n");

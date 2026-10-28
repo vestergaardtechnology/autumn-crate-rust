@@ -81,6 +81,20 @@ impl<'a> Webhooks<'a> {
     /// Creates a webhook: a URL Autumn sends the listed events to, in the environment of the calling key. You choose the `id`, and it can't be changed later. Returns the signing secret once, in this response — store it, it cannot be read back.
     ///
     /// `POST /v1/webhooks.create` (operation `createWebhook`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::CreateWebhookParams;
+    ///
+    /// let response = autumn.webhooks().create(
+    ///     CreateWebhookParams::new("example", "https://example.com/webhooks/autumn"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn create(&self, request: CreateWebhookParams) -> Result<CreateWebhookResponse> {
         self.client
             .execute(&OP_CREATE_WEBHOOK, Some(&request))
@@ -90,6 +104,18 @@ impl<'a> Webhooks<'a> {
     /// Gets one webhook by ID. The signing secret is never returned here — only `webhooks.create` and `webhooks.sync` show one, when they create the webhook.
     ///
     /// `POST /v1/webhooks.get` (operation `getWebhook`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::GetWebhookParams;
+    ///
+    /// let response = autumn.webhooks().get(GetWebhookParams::new("example")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn get(&self, request: GetWebhookParams) -> Result<GetWebhookWebhook> {
         self.client.execute(&OP_GET_WEBHOOK, Some(&request)).await
     }
@@ -97,6 +123,16 @@ impl<'a> Webhooks<'a> {
     /// Lists every webhook in the environment of the calling key, including ones made in the dashboard (these show their `ep_…` ID).
     ///
     /// `POST /v1/webhooks.list` (operation `listWebhooks`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// let response = autumn.webhooks().list().await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn list(&self) -> Result<ListWebhooksResponse> {
         self.client.execute::<(), _>(&OP_LIST_WEBHOOKS, None).await
     }
@@ -104,6 +140,18 @@ impl<'a> Webhooks<'a> {
     /// Updates a webhook's URL, events, description or disabled state. Only the fields you pass change. The ID can't be changed — to rename, create a new webhook.
     ///
     /// `POST /v1/webhooks.update` (operation `updateWebhook`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::UpdateWebhookParams;
+    ///
+    /// let response = autumn.webhooks().update(UpdateWebhookParams::new("example")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn update(&self, request: UpdateWebhookParams) -> Result<UpdateWebhookWebhook> {
         self.client
             .execute(&OP_UPDATE_WEBHOOK, Some(&request))
@@ -113,6 +161,18 @@ impl<'a> Webhooks<'a> {
     /// Permanently deletes a webhook. Autumn stops sending it events immediately. Cannot be undone.
     ///
     /// `POST /v1/webhooks.delete` (operation `deleteWebhook`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::DeleteWebhookParams;
+    ///
+    /// let response = autumn.webhooks().delete(DeleteWebhookParams::new("example")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn delete(&self, request: DeleteWebhookParams) -> Result<DeleteWebhookResponse> {
         self.client
             .execute(&OP_DELETE_WEBHOOK, Some(&request))
@@ -122,6 +182,20 @@ impl<'a> Webhooks<'a> {
     /// Shows what `webhooks.sync` would do with the same body, without changing anything: which webhooks it would create, update or delete, and which existing ones it would leave alone because the body doesn't list them.
     ///
     /// `POST /v1/webhooks.preview_sync` (operation `previewSyncWebhooks`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{PreviewSyncWebhooksSyncWebhooksParams, PreviewSyncWebhooksWebhookRequest};
+    ///
+    /// let response = autumn.webhooks().preview_sync(
+    ///     PreviewSyncWebhooksSyncWebhooksParams::new(vec![PreviewSyncWebhooksWebhookRequest::new("example", "https://example.com/webhooks/autumn")]),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn preview_sync(
         &self,
         request: PreviewSyncWebhooksSyncWebhooksParams,
@@ -134,6 +208,20 @@ impl<'a> Webhooks<'a> {
     /// Makes the listed webhooks exist as described: creates missing ones and updates ones that differ. Webhooks not listed are left alone, unless `skip_deletions` is false: then every webhook not listed is deleted, including ones made in the dashboard. Returns the signing secret of each webhook it created, once. Each webhook is applied on its own: failures are listed in `errors` while the rest still apply, and the request fails only when none could be applied.
     ///
     /// `POST /v1/webhooks.sync` (operation `syncWebhooks`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{SyncWebhooksSyncWebhooksParams, SyncWebhooksWebhookRequest};
+    ///
+    /// let response = autumn.webhooks().sync(
+    ///     SyncWebhooksSyncWebhooksParams::new(vec![SyncWebhooksWebhookRequest::new("example", "https://example.com/webhooks/autumn")]),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn sync(
         &self,
         request: SyncWebhooksSyncWebhooksParams,

@@ -36,6 +36,18 @@ impl<'a> Events<'a> {
     /// List usage events for your organization. Filter by customer, feature, or time range.
     ///
     /// `POST /v1/events.list` (operation `listEvents`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::EventsListParams;
+    ///
+    /// let response = autumn.events().list(EventsListParams::new()).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn list(&self, request: EventsListParams) -> Result<ListEventsResponse> {
         self.client.execute(&OP_LIST_EVENTS, Some(&request)).await
     }
@@ -43,6 +55,20 @@ impl<'a> Events<'a> {
     /// Aggregate usage events by time period. Returns usage totals grouped by feature and optionally by a custom property.
     ///
     /// `POST /v1/events.aggregate` (operation `aggregateEvents`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{EventsAggregateParams, EventsAggregateParamsFeatureIdUnion};
+    ///
+    /// let response = autumn.events().aggregate(
+    ///     EventsAggregateParams::new(EventsAggregateParamsFeatureIdUnion::String("messages".to_string())),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn aggregate(
         &self,
         request: EventsAggregateParams,

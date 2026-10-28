@@ -36,6 +36,20 @@ impl<'a> Licenses<'a> {
     /// Assigns licenses to one or more entities.
     ///
     /// `POST /v1/licenses.attach` (operation `attachLicense`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{AttachLicenseEntity, AttachLicenseParams};
+    ///
+    /// let response = autumn.licenses().attach(
+    ///     AttachLicenseParams::new("cus_123", "pro", vec![AttachLicenseEntity::new("seat_1")]),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn attach(&self, request: AttachLicenseParams) -> Result<AttachLicenseResponse> {
         self.client
             .execute(&OP_ATTACH_LICENSE, Some(&request))
@@ -45,6 +59,20 @@ impl<'a> Licenses<'a> {
     /// Releases licenses assigned to one or more entities.
     ///
     /// `POST /v1/licenses.release` (operation `releaseLicense`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::ReleaseLicenseParams;
+    ///
+    /// let response = autumn.licenses().release(
+    ///     ReleaseLicenseParams::new("cus_123", vec!["seat_1".to_string()]),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn release(&self, request: ReleaseLicenseParams) -> Result<ReleaseLicenseResponse> {
         self.client
             .execute(&OP_RELEASE_LICENSE, Some(&request))

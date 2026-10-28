@@ -139,6 +139,18 @@ impl<'a> Billing<'a> {
     /// **Returns:** A billing response with customer ID, invoice details, and payment URL (if checkout required).
     ///
     /// `POST /v1/billing.attach` (operation `attach`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::AttachParams;
+    ///
+    /// let response = autumn.billing().attach(AttachParams::new("cus_123", "pro")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn attach(&self, request: AttachParams) -> Result<AttachResponse> {
         self.client.execute(&OP_ATTACH, Some(&request)).await
     }
@@ -166,6 +178,20 @@ impl<'a> Billing<'a> {
     /// **Returns:** A billing response with customer ID, invoice details, and payment URL (if checkout required).
     ///
     /// `POST /v1/billing.multi_attach` (operation `multiAttach`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{MultiAttachParams, MultiAttachPlan};
+    ///
+    /// let response = autumn.billing().multi_attach(
+    ///     MultiAttachParams::new("cus_123", vec![MultiAttachPlan::new("pro")]),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn multi_attach(&self, request: MultiAttachParams) -> Result<MultiAttachResponse> {
         self.client.execute(&OP_MULTI_ATTACH, Some(&request)).await
     }
@@ -177,6 +203,20 @@ impl<'a> Billing<'a> {
     /// **Returns:** A preview response with line items, totals, and effective dates for the proposed changes.
     ///
     /// `POST /v1/billing.preview_attach` (operation `previewAttach`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::PreviewAttachParams;
+    ///
+    /// let response = autumn.billing().preview_attach(
+    ///     PreviewAttachParams::new("cus_123", "pro"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn preview_attach(
         &self,
         request: PreviewAttachParams,
@@ -193,6 +233,20 @@ impl<'a> Billing<'a> {
     /// **Returns:** A preview response with line items, totals, and effective dates for the proposed multi-plan attachment.
     ///
     /// `POST /v1/billing.preview_multi_attach` (operation `previewMultiAttach`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{PreviewMultiAttachParams, PreviewMultiAttachPlan};
+    ///
+    /// let response = autumn.billing().preview_multi_attach(
+    ///     PreviewMultiAttachParams::new("cus_123", vec![PreviewMultiAttachPlan::new("pro")]),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn preview_multi_attach(
         &self,
         request: PreviewMultiAttachParams,
@@ -209,6 +263,18 @@ impl<'a> Billing<'a> {
     /// **Returns:** A billing response with customer ID, invoice details, and payment URL (if next action is required).
     ///
     /// `POST /v1/billing.update` (operation `billingUpdate`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::UpdateSubscriptionParams;
+    ///
+    /// let response = autumn.billing().update(UpdateSubscriptionParams::new("cus_123")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn update(&self, request: UpdateSubscriptionParams) -> Result<BillingUpdateResponse> {
         self.client
             .execute(&OP_BILLING_UPDATE, Some(&request))
@@ -222,6 +288,20 @@ impl<'a> Billing<'a> {
     /// **Returns:** A preview response with line items showing prorated charges or credits for the proposed changes.
     ///
     /// `POST /v1/billing.preview_update` (operation `previewUpdate`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::PreviewUpdateParams;
+    ///
+    /// let response = autumn.billing().preview_update(
+    ///     PreviewUpdateParams::new("cus_123"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn preview_update(
         &self,
         request: PreviewUpdateParams,
@@ -238,6 +318,20 @@ impl<'a> Billing<'a> {
     /// **Returns:** A billing response with the resulting invoice summary (one credit invoice per affected subscription for immediate cancels).
     ///
     /// `POST /v1/billing.multi_update` (operation `multiUpdate`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{MultiUpdateCancelAction, MultiUpdateParams, MultiUpdateUpdate};
+    ///
+    /// let response = autumn.billing().multi_update(
+    ///     MultiUpdateParams::new("cus_123", vec![MultiUpdateUpdate::new(MultiUpdateCancelAction::CancelImmediately)]),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn multi_update(&self, request: MultiUpdateParams) -> Result<MultiUpdateResponse> {
         self.client.execute(&OP_MULTI_UPDATE, Some(&request)).await
     }
@@ -249,6 +343,20 @@ impl<'a> Billing<'a> {
     /// **Returns:** A preview with the combined total plus one entry per subscription, each with its own line items, totals, and next-cycle preview.
     ///
     /// `POST /v1/billing.preview_multi_update` (operation `previewMultiUpdate`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{PreviewMultiUpdateCancelAction, PreviewMultiUpdateParams, PreviewMultiUpdateUpdate};
+    ///
+    /// let response = autumn.billing().preview_multi_update(
+    ///     PreviewMultiUpdateParams::new("cus_123", vec![PreviewMultiUpdateUpdate::new(PreviewMultiUpdateCancelAction::CancelImmediately)]),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn preview_multi_update(
         &self,
         request: PreviewMultiUpdateParams,
@@ -261,6 +369,20 @@ impl<'a> Billing<'a> {
     /// Create a billing portal session for a customer to manage their subscription.
     ///
     /// `POST /v1/billing.open_customer_portal` (operation `openCustomerPortal`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::OpenCustomerPortalParams;
+    ///
+    /// let response = autumn.billing().open_customer_portal(
+    ///     OpenCustomerPortalParams::new("cus_123"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn open_customer_portal(
         &self,
         request: OpenCustomerPortalParams,
@@ -273,6 +395,18 @@ impl<'a> Billing<'a> {
     /// Create a payment setup session for a customer to add or update their payment method.
     ///
     /// `POST /v1/billing.setup_payment` (operation `setupPayment`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::SetupPaymentParams;
+    ///
+    /// let response = autumn.billing().setup_payment(SetupPaymentParams::new("cus_123")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn setup_payment(&self, request: SetupPaymentParams) -> Result<SetupPaymentResponse> {
         self.client.execute(&OP_SETUP_PAYMENT, Some(&request)).await
     }
@@ -284,6 +418,18 @@ impl<'a> Billing<'a> {
     /// **Returns:** A verify response with account-level mismatches and a per-subscription status (correct or mismatched) with the mismatches found.
     ///
     /// `POST /v1/billing.verify` (operation `verify`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::VerifyParams;
+    ///
+    /// let response = autumn.billing().verify(VerifyParams::new("cus_123")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn verify(&self, request: VerifyParams) -> Result<VerifyResponse> {
         self.client.execute(&OP_VERIFY, Some(&request)).await
     }
@@ -293,6 +439,20 @@ impl<'a> Billing<'a> {
     /// Image a customer into Autumn for live migration. Read-only against processors.
     ///
     /// `POST /v1/billing.import` (operation `import`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{Billable, DfuFlashParams};
+    ///
+    /// let response = autumn.billing().import(
+    ///     DfuFlashParams::new("cus_123", vec![Billable::new()]),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn import(&self, request: DfuFlashParams) -> Result<DfuFlashResult> {
         self.client.execute(&OP_IMPORT, Some(&request)).await
     }

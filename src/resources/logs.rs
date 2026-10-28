@@ -27,6 +27,18 @@ impl<'a> Logs<'a> {
     /// Search API requests and incoming Stripe webhooks for your organization and environment.
     ///
     /// `POST /v1/logs.search` (operation `searchRequestLogs`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::SearchRequestLogsParams;
+    ///
+    /// let response = autumn.logs().search(SearchRequestLogsParams::new()).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn search(
         &self,
         request: SearchRequestLogsParams,

@@ -72,6 +72,18 @@ impl<'a> Rewards<'a> {
     /// Create a coupon or feature grant.
     ///
     /// `POST /v1/rewards.create` (operation `createReward`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::CreateRewardParams;
+    ///
+    /// let response = autumn.rewards().create(CreateRewardParams::new()).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn create(&self, request: CreateRewardParams) -> Result<CreateRewardResponse> {
         self.client.execute(&OP_CREATE_REWARD, Some(&request)).await
     }
@@ -79,6 +91,16 @@ impl<'a> Rewards<'a> {
     /// List the coupons and feature grants configured for the org.
     ///
     /// `POST /v1/rewards.list` (operation `listRewards`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// let response = autumn.rewards().list().await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn list(&self) -> Result<ListRewardsResponse> {
         self.client.execute::<(), _>(&OP_LIST_REWARDS, None).await
     }
@@ -86,6 +108,18 @@ impl<'a> Rewards<'a> {
     /// Fetch a coupon or feature grant by ID.
     ///
     /// `POST /v1/rewards.get` (operation `getReward`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::GetRewardParams;
+    ///
+    /// let response = autumn.rewards().get(GetRewardParams::new("promo_10")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn get(&self, request: GetRewardParams) -> Result<GetRewardResponse> {
         self.client.execute(&OP_GET_REWARD, Some(&request)).await
     }
@@ -93,6 +127,18 @@ impl<'a> Rewards<'a> {
     /// Update a coupon or feature grant. Omitted fields keep their current value.
     ///
     /// `POST /v1/rewards.update` (operation `updateReward`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::UpdateRewardParams;
+    ///
+    /// let response = autumn.rewards().update(UpdateRewardParams::new("promo_10")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn update(&self, request: UpdateRewardParams) -> Result<UpdateRewardResponse> {
         self.client.execute(&OP_UPDATE_REWARD, Some(&request)).await
     }
@@ -100,6 +146,18 @@ impl<'a> Rewards<'a> {
     /// Delete a coupon or feature grant.
     ///
     /// `POST /v1/rewards.delete` (operation `deleteReward`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::DeleteRewardParams;
+    ///
+    /// let response = autumn.rewards().delete(DeleteRewardParams::new("promo_10")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn delete(&self, request: DeleteRewardParams) -> Result<DeleteRewardResponse> {
         self.client.execute(&OP_DELETE_REWARD, Some(&request)).await
     }
@@ -107,6 +165,20 @@ impl<'a> Rewards<'a> {
     /// Redeem a reward promo code for a customer.
     ///
     /// `POST /v1/rewards.redeem` (operation `redeemRewardCode`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::RedeemRewardCodeParams;
+    ///
+    /// let response = autumn.rewards().redeem_code(
+    ///     RedeemRewardCodeParams::new("REF-CODE", "cus_123"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn redeem_code(
         &self,
         request: RedeemRewardCodeParams,

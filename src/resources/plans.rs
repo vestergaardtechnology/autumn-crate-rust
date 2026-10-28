@@ -69,6 +69,18 @@ impl<'a> Plans<'a> {
     /// **Returns:** The created plan object.
     ///
     /// `POST /v1/plans.create` (operation `createPlan`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::CreatePlanParams;
+    ///
+    /// let response = autumn.plans().create(CreatePlanParams::new("pro", "Example")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn create(&self, request: CreatePlanParams) -> Result<CreatePlanResponse> {
         self.client.execute(&OP_CREATE_PLAN, Some(&request)).await
     }
@@ -82,6 +94,18 @@ impl<'a> Plans<'a> {
     /// **Returns:** The plan object with its full configuration.
     ///
     /// `POST /v1/plans.get` (operation `getPlan`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::GetPlanParams;
+    ///
+    /// let response = autumn.plans().get(GetPlanParams::new("pro")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn get(&self, request: GetPlanParams) -> Result<GetPlanResponse> {
         self.client.execute(&OP_GET_PLAN, Some(&request)).await
     }
@@ -95,6 +119,18 @@ impl<'a> Plans<'a> {
     /// **Returns:** A list of all plans with their pricing and feature configurations.
     ///
     /// `POST /v1/plans.list` (operation `listPlans`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::ListPlansParams;
+    ///
+    /// let response = autumn.plans().list(ListPlansParams::new()).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn list(&self, request: ListPlansParams) -> Result<ListPlansResponse> {
         self.client.execute(&OP_LIST_PLANS, Some(&request)).await
     }
@@ -108,6 +144,18 @@ impl<'a> Plans<'a> {
     /// **Returns:** The updated plan object.
     ///
     /// `POST /v1/plans.update` (operation `updatePlan`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::UpdatePlanParams;
+    ///
+    /// let response = autumn.plans().update(UpdatePlanParams::new("pro")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn update(&self, request: UpdatePlanParams) -> Result<UpdatePlanResponse> {
         self.client.execute(&OP_UPDATE_PLAN, Some(&request)).await
     }
@@ -121,6 +169,18 @@ impl<'a> Plans<'a> {
     /// **Returns:** A success flag indicating the plan was deleted.
     ///
     /// `POST /v1/plans.delete` (operation `deletePlan`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::DeletePlanParams;
+    ///
+    /// let response = autumn.plans().delete(DeletePlanParams::new("pro")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn delete(&self, request: DeletePlanParams) -> Result<DeletePlanResponse> {
         self.client.execute(&OP_DELETE_PLAN, Some(&request)).await
     }

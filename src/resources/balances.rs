@@ -63,6 +63,20 @@ impl<'a> Balances<'a> {
     /// Create a balance for a customer feature.
     ///
     /// `POST /v1/balances.create` (operation `createBalance`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::CreateBalanceParams;
+    ///
+    /// let response = autumn.balances().create(
+    ///     CreateBalanceParams::new("cus_123", "messages"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn create(&self, request: CreateBalanceParams) -> Result<CreateBalanceResponse> {
         self.client
             .execute(&OP_CREATE_BALANCE, Some(&request))
@@ -72,6 +86,18 @@ impl<'a> Balances<'a> {
     /// Lists individual balances (one row per grant) across customers, live or expired: plan balances, standalone balances, top-ups, and pooled balances. Pages may hold fewer than `limit` rows while `has_more` is true.
     ///
     /// `POST /v1/balances.list` (operation `listBalances`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::ListBalancesParams;
+    ///
+    /// let response = autumn.balances().list(ListBalancesParams::new()).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn list(&self, request: ListBalancesParams) -> Result<ListBalancesResponse> {
         self.client.execute(&OP_LIST_BALANCES, Some(&request)).await
     }
@@ -79,6 +105,20 @@ impl<'a> Balances<'a> {
     /// Update a customer balance.
     ///
     /// `POST /v1/balances.update` (operation `updateBalance`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::UpdateBalanceParams;
+    ///
+    /// let response = autumn.balances().update(
+    ///     UpdateBalanceParams::new("cus_123", "messages"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn update(&self, request: UpdateBalanceParams) -> Result<UpdateBalanceResponse> {
         self.client
             .execute(&OP_UPDATE_BALANCE, Some(&request))
@@ -88,6 +128,18 @@ impl<'a> Balances<'a> {
     /// Delete a balance for a customer feature. Can only delete a balance that is not attached to a price (eg. you cannot delete messages that have an overage price).
     ///
     /// `POST /v1/balances.delete` (operation `deleteBalance`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::DeleteBalanceParams;
+    ///
+    /// let response = autumn.balances().delete(DeleteBalanceParams::new("cus_123")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn delete(&self, request: DeleteBalanceParams) -> Result<DeleteBalanceResponse> {
         self.client
             .execute(&OP_DELETE_BALANCE, Some(&request))
@@ -97,6 +149,20 @@ impl<'a> Balances<'a> {
     /// Finalize a previously locked balance. Use 'confirm' to commit the deduction, or 'release' to return the held balance.
     ///
     /// `POST /v1/balances.finalize` (operation `finalizeLock`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{FinalizeBalanceParams, FinalizeLockAction};
+    ///
+    /// let response = autumn.balances().finalize(
+    ///     FinalizeBalanceParams::new("lock_123", FinalizeLockAction::Confirm, "cus_123"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn finalize(&self, request: FinalizeBalanceParams) -> Result<FinalizeLockResponse> {
         self.client.execute(&OP_FINALIZE_LOCK, Some(&request)).await
     }

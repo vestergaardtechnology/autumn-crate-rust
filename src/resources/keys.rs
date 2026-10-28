@@ -45,6 +45,18 @@ impl<'a> Keys<'a> {
     /// Mints a per-customer token (a scoped `am_jwt_` credential) so a downstream / self-hosted app can call Autumn directly without your secret key. Returns a short-lived access token plus a rotating refresh token, both bound to the given customer. Authenticated with your secret key.
     ///
     /// `POST /v1/keys.mint` (operation `mintKey`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::MintKeyParams;
+    ///
+    /// let response = autumn.keys().mint(MintKeyParams::new("cus_123")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn mint(&self, request: MintKeyParams) -> Result<MintKeyResponse> {
         self.client.execute(&OP_MINT_KEY, Some(&request)).await
     }
@@ -52,6 +64,16 @@ impl<'a> Keys<'a> {
     /// Exchanges a refresh token (sent as the Bearer credential) for a freshly rotated access + refresh pair. Self-service for the token holder — no secret key required. The previous refresh token is honored for one rotation as a grace window; replaying an older one revokes the customer's tokens.
     ///
     /// `POST /v1/keys.refresh` (operation `refreshKey`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// let response = autumn.keys().refresh().await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn refresh(&self) -> Result<RefreshKeyResponse> {
         self.client.execute::<(), _>(&OP_REFRESH_KEY, None).await
     }
@@ -59,6 +81,18 @@ impl<'a> Keys<'a> {
     /// Revokes every outstanding token (access and refresh) for a customer. Authenticated with your secret key. New tokens can be issued afterwards with `keys.mint`.
     ///
     /// `POST /v1/keys.revoke` (operation `revokeKey`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::RevokeKeyParams;
+    ///
+    /// let response = autumn.keys().revoke(RevokeKeyParams::new("cus_123")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn revoke(&self, request: RevokeKeyParams) -> Result<RevokeKeyResponse> {
         self.client.execute(&OP_REVOKE_KEY, Some(&request)).await
     }

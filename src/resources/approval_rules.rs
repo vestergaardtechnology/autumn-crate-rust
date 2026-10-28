@@ -81,6 +81,16 @@ impl<'a> ApprovalRules<'a> {
     /// Lists the organization's approval rules, oldest first. Every member and key can read rules. For each request, only the most specific level with a rule for that person decides (user, then role, then everyone), and every rule at that level must pass.
     ///
     /// `POST /v1/approval_rules.list` (operation `listApprovalRules`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// let response = autumn.approval_rules().list().await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn list(&self) -> Result<ListApprovalRulesResponse> {
         self.client
             .execute::<(), _>(&OP_LIST_APPROVAL_RULES, None)
@@ -90,6 +100,18 @@ impl<'a> ApprovalRules<'a> {
     /// Gets one approval rule by ID.
     ///
     /// `POST /v1/approval_rules.get` (operation `getApprovalRule`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::GetApprovalRuleParams;
+    ///
+    /// let response = autumn.approval_rules().get(GetApprovalRuleParams::new("example")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn get(&self, request: GetApprovalRuleParams) -> Result<GetApprovalRuleApprovalRule> {
         self.client
             .execute(&OP_GET_APPROVAL_RULE, Some(&request))
@@ -99,6 +121,20 @@ impl<'a> ApprovalRules<'a> {
     /// Creates an approval rule as version 1. `allow` is `true` (always allowed), `false` (never allowed) or an object of conditions that must all match. Problems with the rule come back as `invalid_approval_rule` with every issue under `details.issues`. Rules apply in live only. Only owners and admins (an OAuth token also needs `organisation:write` consent) and live secret keys with every scope can call it. Anyone else, whatever their scopes and including any sandbox key, gets 403 `approval_rule_editor_required`.
     ///
     /// `POST /v1/approval_rules.create` (operation `createApprovalRule`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{CreateApprovalRuleActionRequestBody, CreateApprovalRuleParams, CreateApprovalRuleParamsAllowUnion, CreateApprovalRuleParamsSubjectsUnion, CreateApprovalRuleSubjectRequest1};
+    ///
+    /// let response = autumn.approval_rules().create(
+    ///     CreateApprovalRuleParams::new("Example", vec![CreateApprovalRuleParamsSubjectsUnion::CreateApprovalRuleSubjectRequest1(CreateApprovalRuleSubjectRequest1::new())], vec![CreateApprovalRuleActionRequestBody::BillingAttach], CreateApprovalRuleParamsAllowUnion::Boolean(true)),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn create(
         &self,
         request: CreateApprovalRuleParams,
@@ -111,6 +147,20 @@ impl<'a> ApprovalRules<'a> {
     /// Updates the fields you pass and saves the rule as its next version. The whole rule is checked again, so changing `actions` re-checks the conditions in `allow`. Sending `allow` replaces it, so switching between `true`, `false` and conditions is one field. Only owners and admins (an OAuth token also needs `organisation:write` consent) and live secret keys with every scope can call it. Anyone else, whatever their scopes and including any sandbox key, gets 403 `approval_rule_editor_required`.
     ///
     /// `POST /v1/approval_rules.update` (operation `updateApprovalRule`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::UpdateApprovalRuleParams;
+    ///
+    /// let response = autumn.approval_rules().update(
+    ///     UpdateApprovalRuleParams::new("example"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn update(
         &self,
         request: UpdateApprovalRuleParams,
@@ -123,6 +173,20 @@ impl<'a> ApprovalRules<'a> {
     /// Deletes an approval rule. Its versions stay readable through `approval_rules.versions.list`. Only owners and admins (an OAuth token also needs `organisation:write` consent) and live secret keys with every scope can call it. Anyone else, whatever their scopes and including any sandbox key, gets 403 `approval_rule_editor_required`.
     ///
     /// `POST /v1/approval_rules.delete` (operation `deleteApprovalRule`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::DeleteApprovalRuleParams;
+    ///
+    /// let response = autumn.approval_rules().delete(
+    ///     DeleteApprovalRuleParams::new("example"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn delete(
         &self,
         request: DeleteApprovalRuleParams,
@@ -135,6 +199,20 @@ impl<'a> ApprovalRules<'a> {
     /// Lists a rule's saved versions, newest first, including after the rule is deleted.
     ///
     /// `POST /v1/approval_rules.versions.list` (operation `listApprovalRuleVersions`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::ListApprovalRuleVersionsParams;
+    ///
+    /// let response = autumn.approval_rules().list_versions(
+    ///     ListApprovalRuleVersionsParams::new("example"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn list_versions(
         &self,
         request: ListApprovalRuleVersionsParams,
@@ -147,6 +225,20 @@ impl<'a> ApprovalRules<'a> {
     /// Says whether the caller could make some request for an action: `scope` when their scope allows it and no rule rules it out, `blocked` when a rule never allows it, and `none` when they lack the action's scope. A conditional rule can still deny a given request; preview it to see. Alias actions such as `billing.multi_attach` are read as the action they're checked as.
     ///
     /// `POST /v1/approvals.can` (operation `approvalsCan`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{ApprovalsCanAction, ApprovalsCanParams};
+    ///
+    /// let response = autumn.approval_rules().can(
+    ///     ApprovalsCanParams::new(ApprovalsCanAction::BillingAttach),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn can(&self, request: ApprovalsCanParams) -> Result<ApprovalsCanResponse> {
         self.client.execute(&OP_APPROVALS_CAN, Some(&request)).await
     }

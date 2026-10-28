@@ -67,6 +67,20 @@ impl<'a> Features<'a> {
     /// **Returns:** The created feature object.
     ///
     /// `POST /v1/features.create` (operation `createFeature`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{CreateFeatureParams, CreateFeatureTypeRequestBody};
+    ///
+    /// let response = autumn.features().create(
+    ///     CreateFeatureParams::new("Example", CreateFeatureTypeRequestBody::Boolean, "messages"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn create(&self, request: CreateFeatureParams) -> Result<CreateFeatureResponse> {
         self.client
             .execute(&OP_CREATE_FEATURE, Some(&request))
@@ -80,6 +94,18 @@ impl<'a> Features<'a> {
     /// **Returns:** The feature object with its full configuration.
     ///
     /// `POST /v1/features.get` (operation `getFeature`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::GetFeatureParams;
+    ///
+    /// let response = autumn.features().get(GetFeatureParams::new("messages")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn get(&self, request: GetFeatureParams) -> Result<GetFeatureResponse> {
         self.client.execute(&OP_GET_FEATURE, Some(&request)).await
     }
@@ -91,6 +117,16 @@ impl<'a> Features<'a> {
     /// **Returns:** A list of all features with their configuration and metadata.
     ///
     /// `POST /v1/features.list` (operation `listFeatures`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// let response = autumn.features().list().await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn list(&self) -> Result<ListFeaturesResponse> {
         self.client.execute::<(), _>(&OP_LIST_FEATURES, None).await
     }
@@ -102,6 +138,18 @@ impl<'a> Features<'a> {
     /// **Returns:** The updated feature object.
     ///
     /// `POST /v1/features.update` (operation `updateFeature`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::UpdateFeatureParams;
+    ///
+    /// let response = autumn.features().update(UpdateFeatureParams::new("messages")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn update(&self, request: UpdateFeatureParams) -> Result<UpdateFeatureResponse> {
         self.client
             .execute(&OP_UPDATE_FEATURE, Some(&request))
@@ -115,6 +163,18 @@ impl<'a> Features<'a> {
     /// **Returns:** A success flag indicating the feature was deleted.
     ///
     /// `POST /v1/features.delete` (operation `deleteFeature`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::DeleteFeatureParams;
+    ///
+    /// let response = autumn.features().delete(DeleteFeatureParams::new("messages")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn delete(&self, request: DeleteFeatureParams) -> Result<DeleteFeatureResponse> {
         self.client
             .execute(&OP_DELETE_FEATURE, Some(&request))

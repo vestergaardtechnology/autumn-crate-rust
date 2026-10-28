@@ -186,6 +186,18 @@ impl Autumn {
     /// **Returns:** Whether access is allowed, plus the current balance for that feature. If Autumn is experiencing degraded service from a downstream provider, the API may return 202 and allow access fail-open.
     ///
     /// `POST /v1/balances.check` (operation `check`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::CheckParams;
+    ///
+    /// let response = autumn.check(CheckParams::new("cus_123", "messages")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn check(&self, request: CheckParams) -> Result<CheckResponse> {
         self.execute(&OP_CHECK, Some(&request)).await
     }
@@ -197,6 +209,18 @@ impl Autumn {
     /// **Returns:** The usage value recorded. By default the event is queued and the API returns 202 with balance: null. With async: false it returns 200 with either a single updated balance or a map of updated balances, or 202 if Autumn is experiencing degraded service and accepted the event for replay.
     ///
     /// `POST /v1/balances.track` (operation `track`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::TrackParams;
+    ///
+    /// let response = autumn.track(TrackParams::new("cus_123")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn track(&self, request: TrackParams) -> Result<TrackResponse> {
         self.execute(&OP_TRACK, Some(&request)).await
     }
@@ -208,6 +232,20 @@ impl Autumn {
     /// **Returns:** The dollar value recorded. By default the event is queued and the API returns 202 with balance: null. With async: false it returns 200 with the updated AI credit system balance, or 202 if Autumn is experiencing degraded service and accepted the event for replay.
     ///
     /// `POST /v1/balances.track_tokens` (operation `trackTokens`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::TrackTokensParams;
+    ///
+    /// let response = autumn.track_tokens(
+    ///     TrackTokensParams::new("cus_123", "anthropic/claude-sonnet-4", 1, 1),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn track_tokens(&self, request: TrackTokensParams) -> Result<TrackTokensResponse> {
         self.execute(&OP_TRACK_TOKENS, Some(&request)).await
     }
@@ -215,6 +253,18 @@ impl Autumn {
     /// Enqueue up to 1000 usage events for asynchronous processing. Items are validated synchronously up front; validated items are then enqueued via SQS for background deduction by workers. The response returns 200 (or 202) immediately and does not include balance information. On partial enqueue failure (some items fail to enqueue, others succeed), the endpoint still returns 200 (or 202) and logs the failures server-side; clients should NOT retry, because retrying re-enqueues the already-succeeded items. A 503 is returned only when zero items were successfully enqueued (queue entirely unavailable) — that case is safe to retry.
     ///
     /// `POST /v1/balances.batch_track` (operation `batchTrack`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::RequestBody;
+    ///
+    /// let response = autumn.batch_track(vec![RequestBody::new("cus_123")]).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn batch_track(&self, request: Vec<RequestBody>) -> Result<BatchTrackResponse> {
         self.execute(&OP_BATCH_TRACK, Some(&request)).await
     }

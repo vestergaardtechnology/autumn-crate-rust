@@ -81,6 +81,20 @@ impl<'a> Referrals<'a> {
     /// Create or fetch a referral code for a customer in a referral program.
     ///
     /// `POST /v1/referrals.create_code` (operation `createReferralCode`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::CreateReferralCodeParams;
+    ///
+    /// let response = autumn.referrals().create_code(
+    ///     CreateReferralCodeParams::new("cus_123", "referral_program"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn create_code(
         &self,
         request: CreateReferralCodeParams,
@@ -93,6 +107,20 @@ impl<'a> Referrals<'a> {
     /// Redeem a referral code for a customer.
     ///
     /// `POST /v1/referrals.redeem_code` (operation `redeemReferralCode`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::RedeemReferralCodeParams;
+    ///
+    /// let response = autumn.referrals().redeem_code(
+    ///     RedeemReferralCodeParams::new("REF-CODE", "cus_123"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn redeem_code(
         &self,
         request: RedeemReferralCodeParams,
@@ -105,6 +133,20 @@ impl<'a> Referrals<'a> {
     /// Create a referral program linked to an existing reward.
     ///
     /// `POST /v1/referral_programs.create` (operation `createReferralProgram`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::{CreateReferralProgramParams, CreateReferralProgramReceivedByRequest, CreateReferralProgramRedeemOnRequest};
+    ///
+    /// let response = autumn.referrals().create_program(
+    ///     CreateReferralProgramParams::new("example", "promo_10", CreateReferralProgramRedeemOnRequest::CustomerCreation, CreateReferralProgramReceivedByRequest::Referrer),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn create_program(
         &self,
         request: CreateReferralProgramParams,
@@ -117,6 +159,16 @@ impl<'a> Referrals<'a> {
     /// List the referral programs configured for the org.
     ///
     /// `POST /v1/referral_programs.list` (operation `listReferralPrograms`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// let response = autumn.referrals().list_programs().await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn list_programs(&self) -> Result<ListReferralProgramsResponse> {
         self.client
             .execute::<(), _>(&OP_LIST_REFERRAL_PROGRAMS, None)
@@ -126,6 +178,20 @@ impl<'a> Referrals<'a> {
     /// Fetch a referral program by ID.
     ///
     /// `POST /v1/referral_programs.get` (operation `getReferralProgram`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::GetReferralProgramParams;
+    ///
+    /// let response = autumn.referrals().get_program(
+    ///     GetReferralProgramParams::new("referral_program_123"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn get_program(
         &self,
         request: GetReferralProgramParams,
@@ -138,6 +204,20 @@ impl<'a> Referrals<'a> {
     /// Update a referral program. Omitted fields keep their current value.
     ///
     /// `POST /v1/referral_programs.update` (operation `updateReferralProgram`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::UpdateReferralProgramParams;
+    ///
+    /// let response = autumn.referrals().update_program(
+    ///     UpdateReferralProgramParams::new("referral_program_123"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn update_program(
         &self,
         request: UpdateReferralProgramParams,
@@ -150,6 +230,20 @@ impl<'a> Referrals<'a> {
     /// Delete a referral program.
     ///
     /// `POST /v1/referral_programs.delete` (operation `deleteReferralProgram`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::DeleteReferralProgramParams;
+    ///
+    /// let response = autumn.referrals().delete_program(
+    ///     DeleteReferralProgramParams::new("referral_program_123"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn delete_program(
         &self,
         request: DeleteReferralProgramParams,

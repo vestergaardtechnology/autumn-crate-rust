@@ -54,6 +54,18 @@ impl<'a> Sandboxes<'a> {
     /// Creates a sandbox: an isolated copy of your organization with its own catalog, customers and secret key. Returns the sandbox's secret key once, in this response — store it, it cannot be read back. Authenticated with your organization's secret key (a sandbox's own key cannot create sandboxes).
     ///
     /// `POST /v1/sandboxes.create` (operation `createSandbox`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::CreateSandboxParams;
+    ///
+    /// let response = autumn.sandboxes().create(CreateSandboxParams::new("Example")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn create(&self, request: CreateSandboxParams) -> Result<CreateSandboxResponse> {
         self.client
             .execute(&OP_CREATE_SANDBOX, Some(&request))
@@ -63,6 +75,16 @@ impl<'a> Sandboxes<'a> {
     /// Lists every sandbox belonging to your organization, newest first. Secret keys are never returned here — only `sandboxes.create` shows one.
     ///
     /// `POST /v1/sandboxes.list` (operation `listSandboxes`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// let response = autumn.sandboxes().list().await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn list(&self) -> Result<ListSandboxesResponse> {
         self.client.execute::<(), _>(&OP_LIST_SANDBOXES, None).await
     }
@@ -70,6 +92,18 @@ impl<'a> Sandboxes<'a> {
     /// Permanently deletes a sandbox and everything inside it: its catalog, customers and secret key. Cannot be undone.
     ///
     /// `POST /v1/sandboxes.delete` (operation `deleteSandbox`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::DeleteSandboxParams;
+    ///
+    /// let response = autumn.sandboxes().delete(DeleteSandboxParams::new("example")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn delete(&self, request: DeleteSandboxParams) -> Result<DeleteSandboxResponse> {
         self.client
             .execute(&OP_DELETE_SANDBOX, Some(&request))
@@ -79,6 +113,16 @@ impl<'a> Sandboxes<'a> {
     /// Wipes every customer, plan, feature and migration draft in the sandbox the calling key belongs to, leaving the sandbox itself, its secret keys and its settings in place. There is no id to pass: a sandbox's own key resets that sandbox, and an organization's test-mode key resets its default sandbox environment. Refused for live keys — only sandboxes can be reset. Cannot be undone.
     ///
     /// `POST /v1/sandboxes.reset` (operation `resetSandbox`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// let response = autumn.sandboxes().reset().await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn reset(&self) -> Result<ResetSandboxResponse> {
         self.client.execute::<(), _>(&OP_RESET_SANDBOX, None).await
     }

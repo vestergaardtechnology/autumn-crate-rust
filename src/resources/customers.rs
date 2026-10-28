@@ -92,6 +92,20 @@ impl<'a> Customers<'a> {
     /// Use this as the primary entrypoint before billing operations so the customer record is always present and up to date.
     ///
     /// `POST /v1/customers.get_or_create` (operation `getOrCreateCustomer`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::GetOrCreateCustomerParams;
+    ///
+    /// let response = autumn.customers().get_or_create(
+    ///     GetOrCreateCustomerParams::new("cus_123"),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn get_or_create(&self, request: GetOrCreateCustomerParams) -> Result<Customer> {
         self.client
             .execute(&OP_GET_OR_CREATE_CUSTOMER, Some(&request))
@@ -103,6 +117,18 @@ impl<'a> Customers<'a> {
     /// Use this when you know the customer exists or assert they exist without creating them.
     ///
     /// `POST /v1/customers.get` (operation `getCustomer`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::GetCustomerParams;
+    ///
+    /// let response = autumn.customers().get(GetCustomerParams::new("cus_123")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn get(&self, request: GetCustomerParams) -> Result<GetCustomerResponse> {
         self.client.execute(&OP_GET_CUSTOMER, Some(&request)).await
     }
@@ -110,6 +136,18 @@ impl<'a> Customers<'a> {
     /// Lists customers with cursor pagination and optional filters. Pass `start_cursor: ""` (or omit) for the first page; use `next_cursor` from a prior response for subsequent pages.
     ///
     /// `POST /v1/customers.list` (operation `listCustomers`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::ListCustomersParams;
+    ///
+    /// let response = autumn.customers().list(ListCustomersParams::new()).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn list(&self, request: ListCustomersParams) -> Result<ListCustomersResponse> {
         self.client
             .execute(&OP_LIST_CUSTOMERS, Some(&request))
@@ -119,6 +157,18 @@ impl<'a> Customers<'a> {
     /// Updates an existing customer by ID.
     ///
     /// `POST /v1/customers.update` (operation `updateCustomer`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::UpdateCustomerParams;
+    ///
+    /// let response = autumn.customers().update(UpdateCustomerParams::new("cus_123")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn update(&self, request: UpdateCustomerParams) -> Result<UpdateCustomerResponse> {
         self.client
             .execute(&OP_UPDATE_CUSTOMER, Some(&request))
@@ -128,6 +178,18 @@ impl<'a> Customers<'a> {
     /// Deletes a customer by ID.
     ///
     /// `POST /v1/customers.delete` (operation `deleteCustomer`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::DeleteCustomerParams;
+    ///
+    /// let response = autumn.customers().delete(DeleteCustomerParams::new("cus_123")).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn delete(&self, request: DeleteCustomerParams) -> Result<DeleteCustomerResponse> {
         self.client
             .execute(&OP_DELETE_CUSTOMER, Some(&request))
@@ -137,6 +199,20 @@ impl<'a> Customers<'a> {
     /// Advance a customer's Stripe test clock to a future time in milliseconds. Only Stripe test-mode customers with a test clock are supported. Advancement is asynchronous; Stripe enforces clock status and advancement limits.
     ///
     /// `POST /v1/customers.advance_test_clock` (operation `advanceTestClock`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::AdvanceTestClockParams;
+    ///
+    /// let response = autumn.customers().advance_test_clock(
+    ///     AdvanceTestClockParams::new("cus_123", 1),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn advance_test_clock(
         &self,
         request: AdvanceTestClockParams,
@@ -149,6 +225,20 @@ impl<'a> Customers<'a> {
     /// Lists recurring plans (including add-ons) across customers, live or expired. Filter by customer, entity, plan, or status. Pages may hold fewer than `limit` rows while `has_more` is true.
     ///
     /// `POST /v1/subscriptions.list` (operation `listSubscriptions`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::ListSubscriptionsParams;
+    ///
+    /// let response = autumn.customers().list_subscriptions(
+    ///     ListSubscriptionsParams::new(),
+    /// ).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn list_subscriptions(
         &self,
         request: ListSubscriptionsParams,
@@ -161,6 +251,18 @@ impl<'a> Customers<'a> {
     /// Lists one-off plan purchases across customers, live or expired. Filter by customer, entity, plan, or status. Pages may hold fewer than `limit` rows while `has_more` is true.
     ///
     /// `POST /v1/purchases.list` (operation `listPurchases`)
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn example(autumn: autumn_sdk::Autumn) -> autumn_sdk::Result<()> {
+    /// use autumn_sdk::models::ListPurchasesParams;
+    ///
+    /// let response = autumn.customers().list_purchases(ListPurchasesParams::new()).await?;
+    /// println!("{response:?}");
+    /// # Ok(())
+    /// # }
+    /// ```
     pub async fn list_purchases(
         &self,
         request: ListPurchasesParams,
