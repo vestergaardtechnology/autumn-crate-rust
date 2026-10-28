@@ -1,0 +1,4 @@
+/target
+Cargo.lock.bak
+codegen/node_modules
+codegen/ir.json

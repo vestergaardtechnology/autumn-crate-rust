@@ -1,0 +1,10 @@
+{
+  "name": "autumn-rs-codegen",
+  "private": true,
+  "type": "module",
+  "description": "Generates the Rust models for the autumn crate from the published autumn-js SDK",
+  "dependencies": {
+    "acorn": "8.14.0",
+    "typescript": "5.6.3"
+  }
+}

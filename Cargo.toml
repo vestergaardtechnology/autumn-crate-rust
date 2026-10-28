@@ -1,0 +1,36 @@
+[package]
+name = "autumn-sdk"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+description = "Rust SDK for Autumn (useautumn.com): pricing, billing and usage-based entitlements. A port of the autumn-js server SDK."
+license = "MIT"
+repository = "https://github.com/vestergaardtechnology/autumn-crate-rust"
+homepage = "https://docs.useautumn.com"
+documentation = "https://docs.rs/autumn-sdk"
+readme = "README.md"
+keywords = ["autumn", "billing", "stripe", "pricing", "sdk"]
+categories = ["api-bindings", "web-programming::http-client"]
+exclude = ["codegen/node_modules", "codegen/*.json"]
+
+[lib]
+name = "autumn_sdk"
+
+[features]
+default = ["rustls-tls"]
+# TLS backend for reqwest. Pick one.
+rustls-tls = ["reqwest/rustls-tls"]
+native-tls = ["reqwest/native-tls"]
+
+[dependencies]
+reqwest = { version = "0.12", default-features = false, features = ["json", "http2", "charset"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["time"] }
+log = "0.4"
+uuid = { version = "1", features = ["v4"] }
+rand = "0.8"
+httpdate = "1"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "io-util", "sync"] }
